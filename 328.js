@@ -1,38 +1,35 @@
-var ListNode = /** @class */ (function () {
-    function ListNode(val, next) {
+"use strict";
+class ListNode {
+    constructor(val, next) {
         this.val = val === undefined ? 0 : val;
         this.next = next === undefined ? null : next;
     }
-    return ListNode;
-}());
+}
 function oddEvenList(head) {
-    var isOdd = head.value % 2;
-    var node = head;
-    var lastOdd;
-    var lastEven;
-    while (node.next) {
-        var isInnerOdd = node.value % 2;
-        if (isOdd === isInnerOdd) {
-            if (isOdd) {
-                if (!lastOdd) {
-                    lastOdd = node;
-                }
-                else {
-                    lastOdd.next = node;
-                    lastOdd = node;
-                }
+    if (!head || !head.next)
+        return head; // Edge case: empty list or one node
+    var node = head; // Pointer to traverse the list
+    var secondNode = head.next; // Head of the even list
+    var even = secondNode; // Pointer to traverse the even list
+    var count = 1; // Track the position of nodes (odd or even)
+    while (node && node.next) {
+        var nextNode = node.next.next; // Save the next odd node
+        if (count % 2 === 1) {
+            // If current node is odd
+            node.next = nextNode; // Connect to the next odd node
+            if (!nextNode) {
+                node.next = secondNode; // Attach the even list at the end
+                break;
             }
-            else {
-                if (!lastEven) {
-                    lastEven = node;
-                }
-                else {
-                    lastEven.next = node;
-                    lastEven = node;
-                }
-            }
+            node.next && (node = node.next); // Move the odd pointer
         }
-
-        node = node.next;
+        else {
+            // If current node is even
+            even.next = nextNode; // Connect to the next even node
+            even.next && (even = even.next); // Move the even pointer
+        }
+        count++;
     }
+    node.next = secondNode; // Finally attach the even list to the end of the odd list
+    return head;
 }
